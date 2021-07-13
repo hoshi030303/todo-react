@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./style.css";
+import { InputTodo } from "./components/InputTodo";
+import { IncompleteTodos } from "./components/IncompleteTodos";
+import { CompleteTodos } from "./components/CompleteTodos";
 
 export const App = () => {
   const [todoText, setTodoText] = useState("");
@@ -27,7 +30,7 @@ export const App = () => {
     const newIncompleteTodos = [...incompleteTodos];
     newIncompleteTodos.splice(index, 1);
 
-    // 現在存在する完了のTODOの後ろに未完了にあったTODOを追加する。
+    // 現在存在する完了のTODOの後ろに未完了にあったTODOを追加する
     const newCompleteTodos = [...completeTodos, incompleteTodos[index]];
     setIncompleteTodos(newIncompleteTodos);
     setCompleteTodos(newCompleteTodos);
@@ -42,43 +45,21 @@ export const App = () => {
     setIncompleteTodos(newIncompleteTodos);
   };
 
+  // 表示されるところ
+  //　コンポーネント化のおかげですっきりしている
   return (
     <>
-      <div className="input-area">
-        <input
-          placeholder="TODOを入力"
-          value={todoText}
-          onChange={onChangeTodoText}
-        />
-        <button onClick={onClickAddTodo}>追加</button>
-      </div>
-      <div className="incomplete-area">
-        <p className="title">未完了のTODO</p>
-        <ul>
-          {incompleteTodos.map((todo, index) => {
-            return (
-              <div key={todo} className="list-row">
-                <li>{todo}</li>
-                <button onClick={() => onClickCompleteTodo(index)}>完了</button>
-                <button onClick={() => onClickDeleteTodo(index)}>削除</button>
-              </div>
-            );
-          })}
-        </ul>
-      </div>
-      <div className="complete-area">
-        <p className="title">完了のTODO</p>
-        <ul>
-          {completeTodos.map((todo, index) => {
-            return (
-              <div key={todo} className="list-row">
-                <li>{todo}</li>
-                <button onClick={() => onClickBackTodo(index)}>戻す</button>
-              </div>
-            );
-          })}
-        </ul>
-      </div>
+      <InputTodo
+        todoText={todoText}
+        onChange={onChangeTodoText}
+        onClick={onClickAddTodo}
+      />
+      <IncompleteTodos
+        todos={incompleteTodos}
+        onClickCompleteTodo={onClickCompleteTodo}
+        onClickDeleteTodo={onClickDeleteTodo}
+      />
+      <CompleteTodos todos={completeTodos} onClickBackTodo={onClickBackTodo} />
     </>
   );
 };
